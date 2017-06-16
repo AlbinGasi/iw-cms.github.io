@@ -51,7 +51,7 @@ class Table
 		  `comment_status` varchar(45) COLLATE utf8_unicode_ci DEFAULT 'open',
 		  `post_gallery` longtext CHARACTER SET utf8,
 		  `post_name` varchar(225) COLLATE utf8_unicode_ci NOT NULL,
-		  `post_date2` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+		  `post_date2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
 		  PRIMARY KEY (`post_id`)
 		) ENGINE=".$this->tableType." DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 

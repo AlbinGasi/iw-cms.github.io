@@ -1,5 +1,5 @@
 <?php
-SiteFunc::master_header("All Posts -> Posts","All Posts","<li><a href='posts/'>Posts</a></li><li>All posts</li>");
+SiteFunc::master_header("All Pages -> Pages","All Pages","<li><a href='pages/'>Pages</a></li><li>All pages</li>");
 
 if(!Admin::can_view()){
 	Alerts::get_alert("danger","You can't access to this area.");
@@ -11,7 +11,7 @@ if(Validation::params3_($this->params3)){
 }
 
 
-$draftPost = $this->posts_model->get_postStatus2('post');
+$draftPost = $this->posts_model->get_postStatus2('page');
 ?>
 			  <!-- Modal -->
 			  <div class="modal fade" id="myModal" role="dialog">
@@ -65,8 +65,6 @@ $draftPost = $this->posts_model->get_postStatus2('post');
                                     <tr>
                                         <th>Title</th>
                                         <th>Author</th>
-                                        <th>Categories</th>
-                                        <th>Comments</th>
                                         <th>Date</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
@@ -81,15 +79,12 @@ $draftPost = $this->posts_model->get_postStatus2('post');
 			echo "<tr>";
 			echo "<td>". Posts::if_more_than10($v2['post_title'])."</td>";
 			echo "<td>".$v2['post_author']."</td>";
-			echo "<td>". Posts::if_more_than10(Categories::get_category_for_post2($v2['post_id']))."</td>";
-			echo "<td><a href='posts/post_view/".$v2['post_id']."'><span class='comments-view'><i class='fa fa-fw fa-comment'></i> ".Comments::get_comment_by_post($v2['post_id'])."</span></a></td>";
 			echo "<td>". Users_gen::convert_date($v2['post_date'])."</td>";
 		
-		
 			if(Admin::can_view_2()){
-				echo "<td><a href='".Config::get('path')."posts/edit/".$v2['post_id']."'><i class='fa fa-fw fa-edit'></i></</a></td>";
+				echo "<td><a href='".Config::get('path')."pages/edit/".$v2['post_id']."'><i class='fa fa-fw fa-edit'></i></</a></td>";
 			}else if($get_user_username->username == $v2['post_author']){
-				echo "<td><a href='".Config::get('path')."posts/edit/".$v2['post_id']."'><i class='fa fa-fw fa-edit'></i></</a></td>";
+				echo "<td><a href='".Config::get('path')."pages/edit/".$v2['post_id']."'><i class='fa fa-fw fa-edit'></i></</a></td>";
 			}else{
 				echo "<td></td>";
 			}
@@ -132,8 +127,6 @@ $draftPost = $this->posts_model->get_postStatus2('post');
                                     <tr>
                                         <th>Title</th>
                                         <th>Author</th>
-                                        <th>Categories</th>
-                                        <th>Comments</th>
                                         <th>Date</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
@@ -146,7 +139,7 @@ $draftPost = $this->posts_model->get_postStatus2('post');
 									$start = Pagination::$start;
 									$limit = Pagination::$limit;
 									
-									$all_posts = Posts_all::get_all(null," WHERE post_status='publish' and post_type='post' ORDER BY post_date DESC LIMIT {$start}, {$limit}");
+									$all_posts = Posts_all::get_all(null," WHERE post_status='publish' and post_type='page' ORDER BY post_date DESC LIMIT {$start}, {$limit}");
 
 									$get_user_username = Users::get_by_id(Admin::get_user_id());
 									
@@ -155,14 +148,12 @@ $draftPost = $this->posts_model->get_postStatus2('post');
 											echo "<tr>";
 											echo "<td>". Posts::if_more_than10($v['post_title'])."</td>";
 											echo "<td>".$v['post_author']."</td>";
-											echo "<td>". Posts::if_more_than10(Categories::get_category_for_post2($v['post_id']))."</td>";
-											echo "<td><a href='posts/post_view/".$v['post_id']."'><span class='comments-view'><i class='fa fa-fw fa-comment'></i> ".Comments::get_comment_by_post($v['post_id'])."</span></a></td>";
 											echo "<td>". Users_gen::convert_date($v['post_date'])."</td>";
 
 											if(Admin::can_view_2()){
-												echo "<td><a href='".Config::get('path')."posts/edit/".$v['post_id']."'><i class='fa fa-fw fa-edit'></i></</a></td>";
+												echo "<td><a href='".Config::get('path')."pages/edit/".$v['post_id']."'><i class='fa fa-fw fa-edit'></i></</a></td>";
 											}else if($get_user_username->username == $v['post_author']){
-												echo "<td><a href='".Config::get('path')."posts/edit/".$v['post_id']."'><i class='fa fa-fw fa-edit'></i></</a></td>";
+												echo "<td><a href='".Config::get('path')."pages/edit/".$v['post_id']."'><i class='fa fa-fw fa-edit'></i></</a></td>";
 											}else{
 												echo "<td></td>";
 											}
@@ -201,7 +192,7 @@ $draftPost = $this->posts_model->get_postStatus2('post');
 
 			if(confirm("Are you sure you want to delete this post?")){
 			$.ajax({
-				url: 'posts/delete/',
+				url: 'pages/delete/',
 				type: 'post',
 				data: {'id':id},
 				success: function(feedback){
@@ -223,7 +214,7 @@ $draftPost = $this->posts_model->get_postStatus2('post');
 			var id_el = $(this).attr("id");
 			
 			$.ajax({
-				url: 'posts/admin_view/',
+				url: 'pages/admin_view/',
 				type: 'post',
 				data: {'id':id_el},
 				success: function(feedback_view){

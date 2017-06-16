@@ -127,14 +127,25 @@ class Posts extends Entity
     }
     
     public function get_postStatus(){
-    	$stmt = self::$_db->query("SELECT * FROM ".Config::get('table_prefix')."posts WHERE post_status='draft' ORDER BY post_date2 DESC");
-    	$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    	
-    	if($stmt->rowCount() < 1){
-    		return "";
-    	}else{
-    		return $res;
-    	}
+        $stmt = self::$_db->query("SELECT * FROM ".Config::get('table_prefix')."posts WHERE post_status='draft' ORDER BY post_date DESC");
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        if($stmt->rowCount() < 1){
+            return "";
+        }else{
+            return $res;
+        }
+    }
+
+    public function get_postStatus2($type){
+        $stmt = self::$_db->query("SELECT * FROM ".Config::get('table_prefix')."posts WHERE post_status='draft' and post_type='".$type."' ORDER BY post_date DESC");
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        if($stmt->rowCount() < 1){
+            return "";
+        }else{
+            return $res;
+        }
     }
     
     public function setPostName($text){

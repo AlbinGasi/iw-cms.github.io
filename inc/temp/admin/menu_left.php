@@ -36,6 +36,31 @@ $user_id = (isset($_SESSION['user_ag']['user_id'])) ? $_SESSION['user_ag']['user
 							?>
 						</ul>
                     </li>
+
+                    <?php
+                        
+                        if(Admin::can_view()){
+                            ?>
+                        <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#pages"><i class="fa fa-fw fa-book"></i> Pages <i class="fa fa-fw fa-caret-down"></i></a>
+                            <ul id="pages" class="collapse">
+                                <li>
+                                    <a id="all" href="pages/all">All Pages</a>
+                                </li>
+                                <li>
+                                    <a id="add" href="pages/add">Add New</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <?php
+                        }
+                        ?>
+
+
+
+
+
+
 					<li>
                         <a href="javascript:;" data-toggle="collapse" data-target="#media"><i class="fa fa-fw fa-camera"></i> Media <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="media" class="collapse">

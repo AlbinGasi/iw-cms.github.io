@@ -15,6 +15,8 @@ if(isset($_POST['boothu'])){
 		$cmsurl = $_POST['cmsurl'];
 		$cmspath = $_POST['cmspath'];
 		
+		$hash_key = uniqid();
+		
 		
 		
 		if(file_exists("../../core/config.php")){
@@ -42,6 +44,7 @@ if(isset($_POST['boothu'])){
 				"folder_name" => "'.$foldername.'", // your folder name
 				"url_site" => "'.$weburl.'", // link from your site http://www.yoursite.com/ 
 				"url_news" => "'.$newsurl.'", // this is link or page where you want to show your news
+				"hash_key" => "'.$hash_key.'",
 
 				"ADMIN" => array(
 						"pagination_path" => "posts/all/",

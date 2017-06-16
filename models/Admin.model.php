@@ -10,7 +10,8 @@ class Admin extends Entity
 	}
 	
 	public static function get_user_id(){
-		$user_id = (isset($_SESSION['user_ag']['user_id'])) ? $_SESSION['user_ag']['user_id'] : -122;
+		$siteHASH = Config::get('hash_key');
+		$user_id = (isset($_SESSION[$siteHASH]['user_id'])) ? $_SESSION[$siteHASH]['user_id'] : -122;
 		return $user_id;
 	}
 	
@@ -31,7 +32,8 @@ class Admin extends Entity
 	}
 	
 	public static function can_view(){
-		$user_id = (isset($_SESSION['user_ag']['user_id'])) ? $_SESSION['user_ag']['user_id'] : -122;
+		$siteHASH = Config::get('hash_key');
+		$user_id = (isset($_SESSION[$siteHASH]['user_id'])) ? $_SESSION[$siteHASH]['user_id'] : -122;
 	
 		if(Users::is_admin2($user_id) || Users::is_moderator($user_id) || Users::is_writer($user_id)){
 			return true;
@@ -41,7 +43,8 @@ class Admin extends Entity
 	}
 	
 		public static function can_view_2(){
-		$user_id = (isset($_SESSION['user_ag']['user_id'])) ? $_SESSION['user_ag']['user_id'] : -122;
+		$siteHASH = Config::get('hash_key');
+		$user_id = (isset($_SESSION[$siteHASH]['user_id'])) ? $_SESSION[$siteHASH]['user_id'] : -122;
 		
 		if(Users::is_admin2($user_id) || Users::is_moderator($user_id)){
 			return true;
@@ -51,7 +54,8 @@ class Admin extends Entity
 	}
 	
 	public static function is_writer(){
-		$user_id = (isset($_SESSION['user_ag']['user_id'])) ? $_SESSION['user_ag']['user_id'] : -122;
+		$siteHASH = Config::get('hash_key');
+		$user_id = (isset($_SESSION[$siteHASH]['user_id'])) ? $_SESSION[$siteHASH]['user_id'] : -122;
 		
 		if(Users::is_writer($user_id)){
 			return true;
@@ -61,7 +65,8 @@ class Admin extends Entity
 	}
 	
 	public static function is_mod(){
-		$user_id = (isset($_SESSION['user_ag']['user_id'])) ? $_SESSION['user_ag']['user_id'] : -122;
+		$siteHASH = Config::get('hash_key');
+		$user_id = (isset($_SESSION[$siteHASH]['user_id'])) ? $_SESSION[$siteHASH]['user_id'] : -122;
 		
 		if(Users::is_moderator($user_id)){
 			return true;
@@ -71,7 +76,9 @@ class Admin extends Entity
 	}
 	
 	public static function admin_moderator_author($author){
-		$user_id = (isset($_SESSION['user_ag']['user_id'])) ? $_SESSION['user_ag']['user_id'] : -122;
+		$siteHASH = Config::get('hash_key');
+		$user_id = (isset($_SESSION[$siteHASH]['user_id'])) ? $_SESSION[$siteHASH]['user_id'] : -122;
+		
 		$loggedUser= Users::get_by_id(self::get_user_id());
 		
 		if(Users::is_admin2($user_id) || Users::is_moderator($user_id)){

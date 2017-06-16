@@ -1,5 +1,5 @@
 <?php
-SiteFunc::master_header("Edit Post -> Posts","Edit post","<li><a href='posts/'>Posts</a></li><li>Edit post</li>");
+SiteFunc::master_header("Edit Page -> Pages","Edit page","<li><a href='pages/'>Pages</a></li><li>Edit page</li>");
 
 if(empty($this->id)){
 	echo '<div class="alert alert-danger">
@@ -23,13 +23,13 @@ $get_user_username = Users::get_by_id(Admin::get_user_id());
  if(Admin::can_view_2()){
 	 
  }else if($get_post_username->post_author != $get_user_username->username){
-	 Alerts::get_alert("danger","Error!","You can't edit this post.");
+	 Alerts::get_alert("danger","Error!","You can't edit this page.");
 	 SiteFunc::master_footer();
 	 return false;
 }
 
 if(!Posts_edit::check_post_for_edtit($this->id)){
-	 Alerts::get_alert("danger","Error!","Post not found!");
+	 Alerts::get_alert("danger","Error!"," Page not found!");
 	SiteFunc::master_footer();
 	return false;
 }
@@ -81,12 +81,7 @@ $post = Posts_edit::get_by_id($this->id);
 
 <label>Title</label>
 <input class="form-control" name="title" value="<?php echo $post->post_title; ?>">
-<p class="help-block">Enter title of your news.</p>
-</div>
-<div class="form-group">
-	<label>Introduction</label>
-	<textarea class="form-control textarea-c" rows="3" name="introduction"><?php echo $post->post_introduction; ?></textarea>
-	<p class="help-block">A few words of introduction.</p>
+<p class="help-block">Enter title of your page.</p>
 </div>
 
 <div class="form-group">
@@ -353,7 +348,7 @@ echo '</div></div></div></div></div>';
 ?>
 
 <div class="form-group">
-    <label>Enter your news</label>
+    <label>Content</label>
     <textarea class="form-control textarea-c" rows="20" name="news"><?php echo $post->post_content; ?></textarea>
                             </div>
                        
@@ -361,66 +356,11 @@ echo '</div></div></div></div></div>';
 </div>
 <div class="col-lg-3">
 <h3></h3>
+
+
 <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Category</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="form-group">
-								<?php 
-								$categories = Categories::get_all();
-									foreach($categories as $k => $v){
-										echo "<div class='checkbox'>";
-										echo "<label>";
-										
-										if(in_array($v['category_name'],$post_category)){
-											echo "<input type='checkbox' name='category[]' value=".$v['category_name']." checked>".ucfirst($v[	'category_name2']);
-										}else{
-											echo "<input type='checkbox' name='category[]' value=".$v['category_name'].">".ucfirst($v[	'category_name2']);
-										}
-										
-										
-										echo "</label>";
-										echo "</div>";
-								}  
-								?>
-								<p class="help-block">Select categories for your post.</p>
-                            </div>
-                            </div>
-                        </div>
-						
-<div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Comment status</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="form-group">
-							
-							<?php
-								
-								$comment_status = Posts::comment_status(); //arr
-								$current_comment_status = Posts::current_comment_status($this->id);
-								
-								foreach($comment_status as $c_status){
-									echo '<div class="radio">';
-									echo '<label>';
-									if($current_comment_status == $c_status){
-										echo '<input type="radio" name="comment-status" value="'.$c_status.'" checked>'.ucfirst($c_status);
-									}else{
-										echo '<input type="radio" name="comment-status" value="'.$c_status.'">'.ucfirst($c_status);
-									}
-									echo '</label>';
-									echo '</div>';
-								}
-								?>
-								<p class="help-block">Allow or disable comment for this post.</p>
-                            </div>
-                            </div>
-                        </div>
-						
-<div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Post status</h3>
+                                <h3 class="panel-title">Page status</h3>
                             </div>
                             <div class="panel-body">
                                 <div class="form-group">
@@ -579,14 +519,14 @@ if(isset($_POST['btn_submit'])){
 	$post_edit->post_title = strip_tags(trim($_POST['title']));
 	
 	$nName = strip_tags(trim($_POST['title']));
-	$post_edit->post_name = $post_edit->setPostNameEdit($nName) . "-" . $post->post_id;
+	$post_edit->post_name = $post_edit->setPostNameEdit($nName);
 	
-	$post_edit->post_introduction = htmlentities(trim($_POST['introduction']));
+	$post_edit->post_introduction = '';
 	$post_edit->post_image = (!empty($_FILES['image']['name'])) ? Posts_image::get_image_new_name($_FILES['image']['name'],$_FILES['image']['type']): Posts_image::get_post_image_name($this->id);
 	$post_edit->post_content = htmlentities(trim($_POST['news']));
-	$post_edit->post_category = (isset($_POST['category'])) ? Posts_insert::implode_categories_name($_POST['category']) : "";
-	$post_edit->post_type = "post";
-	$post_edit->comment_status = strip_tags(trim($_POST['comment-status']));
+	$post_edit->post_category = (isset($_POST['category'])) ? strip_tags(trim($_POST['category'])) : "page";
+	$post_edit->post_type = "page";
+	$post_edit->comment_status = 'closed';
 	$post_edit->post_status = strip_tags(trim($_POST['post-status']));
 	$post_edit->post_author = Posts::get_post_author($this->id);
 
@@ -714,7 +654,6 @@ if(isset($_POST['btn_submit'])){
 
 
 
-echo Comments::show_comments_of_post($this->id);
 ?>
 
 
@@ -759,7 +698,7 @@ echo Comments::show_comments_of_post($this->id);
 										var id_el = $(".apv-id").attr("id");
 										
 										$.ajax({
-											url: 'posts/admin_view/',
+											url: 'pages/admin_view/',
 											type: 'post',
 											data: {'id':id_el},
 											success: function(feedback_view){
@@ -784,7 +723,7 @@ echo Comments::show_comments_of_post($this->id);
 <script>
 	$(document).on("click","#close-post-success",function(){
 			var id = $("#ref-post-id").val();
-			window.open('posts/edit/'+id, '_self');
+			window.open('pages/edit/'+id, '_self');
 		});
 
 

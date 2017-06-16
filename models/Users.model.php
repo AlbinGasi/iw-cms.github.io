@@ -67,12 +67,15 @@ class Users extends Entity
 						Alerts::get_alert("danger","Sorry!","Your account is deactivated, contact the site administrator for new activation.");
 					}else{
 						if($user['username'] == $username && $user['password'] == $password){
-							$_SESSION['user_ag'] = array();
+							$siteHASH = Config::get('hash_key');
+							$_SESSION[$siteHASH] = array();
 							if($user['user_status'] == 351){
-								$_SESSION['user_ag']['adminuser'] = "admin351";
+								$_SESSION[$siteHASH]['adminuser'] = "admin351";
 							}
-							$_SESSION['user_ag']['logedin'] = "successUserLogged_871";
-							$_SESSION['user_ag']['user_id'] = $user['user_id'];
+							$_SESSION[$siteHASH]['logedin'] = "successUserLogged_871";
+							$_SESSION[$siteHASH]['user_id'] = $user['user_id'];
+							$_SESSION[$siteHASH]['password'] = $user['password'];
+							$_SESSION[$siteHASH]['username'] = $user['username'];
 							Alerts::get_alert("info","Successful", "You will be redirect to index page.");
 						}else{
 							Alerts::get_alert("danger","Error","Check your username or password.");
@@ -87,8 +90,9 @@ class Users extends Entity
 	}
 
 	public static function is_admin(){
-		if(isset($_SESSION['user_ag']['adminuser'])){
-			if($_SESSION['user_ag']['adminuser'] == "admin351"){
+		$siteHASH = Config::get('hash_key');
+		if(isset($_SESSION[$siteHASH]['adminuser'])){
+			if($_SESSION[$siteHASH]['adminuser'] == "admin351"){
 			return true;
 			}else{
 			return false;
@@ -140,11 +144,27 @@ class Users extends Entity
 		}
 	}
 	
+	public static function get_user_by_id($id,$return){
+			$stmt = self::$_db->prepare("SELECT username, password FROM ".Config::get('table_prefix')."users WHERE user_id = :id LIMIT 1");
+			$stmt->bindParam(':id', $id);
+			$stmt->execute();
+			$res = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $res[$return];
+		}
+	
 	public static function is_loggedin(){
-		if(isset($_SESSION['user_ag']['logedin'])){
-			if($_SESSION['user_ag']['logedin'] == "successUserLogged_871"){
-				if(isset($_SESSION['user_ag']['user_id'])){
-					return true;
+		$siteHASH = Config::get('hash_key');
+		$user_id = (isset($_SESSION[$siteHASH]['user_id'])) ? $_SESSION[$siteHASH]['user_id'] : -122;
+		$username = self::get_user_by_id($user_id,'username');
+		$password = self::get_user_by_id($user_id,'password');
+		if(isset($_SESSION[$siteHASH]['logedin'])){
+			if($_SESSION[$siteHASH]['logedin'] == "successUserLogged_871"){
+				if(isset($_SESSION[$siteHASH]['user_id']) && isset($_SESSION[$siteHASH]['password']) && isset($_SESSION[$siteHASH]['username'])){
+					if($_SESSION[$siteHASH]['password'] == $password && $_SESSION[$siteHASH]['username'] == $username){
+						return true;
+					}else{
+						return false;
+					}
 				}else{
 					return false;
 				}

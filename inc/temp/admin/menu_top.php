@@ -1,5 +1,6 @@
 <?php
-$ch_user_id = (isset($_SESSION['user_ag']['user_id'])) ? $_SESSION['user_ag']['user_id'] : -122;
+$siteHASH = Config::get('hash_key');
+$ch_user_id = (isset($_SESSION[$siteHASH]['user_id'])) ? $_SESSION[$siteHASH]['user_id'] : -122;
 ?>
 <body>
 <div id="wrapper">
@@ -109,7 +110,7 @@ $ch_user_id = (isset($_SESSION['user_ag']['user_id'])) ? $_SESSION['user_ag']['u
                 </li>
                 <li class="dropdown">
 				<?php 
-					$first_name = Users_gen::get_fname($_SESSION['user_ag']['user_id']);
+					$first_name = Users_gen::get_fname($_SESSION[$siteHASH]['user_id']);
 					
 				?>
 				

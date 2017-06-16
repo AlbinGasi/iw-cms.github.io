@@ -1,7 +1,7 @@
 <?php
 SiteFunc::master_header("User profil","Profil","<li><a href='user/'>User</a></li><li>Profil view</li>");
-
-$this->user_id = (isset($_SESSION['user_ag']['user_id'])) ? $_SESSION['user_ag']['user_id'] : -122;
+$siteHASH = Config::get('hash_key');
+$this->user_id = (isset($_SESSION[$siteHASH]['user_id'])) ? $_SESSION[$siteHASH]['user_id'] : -122;
 
 if($this->username != null){
 if(Users_gen::check_user_by_username($this->username)){

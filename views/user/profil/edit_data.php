@@ -57,6 +57,7 @@ if(Validation_user::user_edit($first_name,$last_name,$username,$username2,$email
 	$edit_user->first_name = $first_name;
 	$edit_user->last_name = $last_name;
 	$edit_user->username = $username;
+	$edit_user->email = $email;
 	
 	if(!empty($date)){
 		$edit_user->born_date = $date;

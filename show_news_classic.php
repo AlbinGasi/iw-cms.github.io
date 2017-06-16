@@ -224,7 +224,7 @@ class Eposts
 	}
 	
 	public function get_allPosts(){
-		$stmt = self::$_db->query("SELECT * FROM ".EConfig::get('table_prefix')."posts WHERE post_status='publish' ORDER BY post_date DESC");
+		$stmt = self::$_db->query("SELECT * FROM ".EConfig::get('table_prefix')."posts WHERE post_status='publish' and post_type='post' ORDER BY post_date DESC");
 		$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $res;
 	}
@@ -247,9 +247,9 @@ class Eposts
 			}
 			$category_id = trim($category_id,",");
 			if($newsNumber == "none"){
-				$stmt2 = self::$_db->query("SELECT * FROM ".EConfig::get('table_prefix')."posts JOIN ".EConfig::get('table_prefix')."post_category ON ".EConfig::get('table_prefix')."posts.post_id=".EConfig::get('table_prefix')."post_category.post_id WHERE ".EConfig::get('table_prefix')."post_category.category_id in ({$category_id}) and ".EConfig::get('table_prefix')."posts.post_status='publish' ORDER BY ".EConfig::get('table_prefix')."posts.post_date DESC");
+				$stmt2 = self::$_db->query("SELECT * FROM ".EConfig::get('table_prefix')."posts JOIN ".EConfig::get('table_prefix')."post_category ON ".EConfig::get('table_prefix')."posts.post_id=".EConfig::get('table_prefix')."post_category.post_id WHERE ".EConfig::get('table_prefix')."post_category.category_id in ({$category_id}) and ".EConfig::get('table_prefix')."posts.post_status='publish' and post_type='post' ORDER BY ".EConfig::get('table_prefix')."posts.post_date DESC");
 			}else if(is_numeric($newsNumber)){
-				$stmt2 = self::$_db->query("SELECT * FROM ".EConfig::get('table_prefix')."posts JOIN ".EConfig::get('table_prefix')."post_category ON ".EConfig::get('table_prefix')."posts.post_id=".EConfig::get('table_prefix')."post_category.post_id WHERE ".EConfig::get('table_prefix')."post_category.category_id in ({$category_id}) and ".EConfig::get('table_prefix')."posts.post_status='publish' ORDER BY ".EConfig::get('table_prefix')."posts.post_date DESC LIMIT {$newsNumber}");
+				$stmt2 = self::$_db->query("SELECT * FROM ".EConfig::get('table_prefix')."posts JOIN ".EConfig::get('table_prefix')."post_category ON ".EConfig::get('table_prefix')."posts.post_id=".EConfig::get('table_prefix')."post_category.post_id WHERE ".EConfig::get('table_prefix')."post_category.category_id in ({$category_id}) and ".EConfig::get('table_prefix')."posts.post_status='publish' and post_type='post' ORDER BY ".EConfig::get('table_prefix')."posts.post_date DESC LIMIT {$newsNumber}");
 			}
 			
 			if($stmt2->rowCount() > 0){
@@ -265,7 +265,7 @@ class Eposts
 	}
 	
 	public function get_postByName($postName){
-		$stmt = self::$_db->prepare("SELECT * FROM ".EConfig::get('table_prefix')."posts WHERE post_status='publish' and post_name=?");
+		$stmt = self::$_db->prepare("SELECT * FROM ".EConfig::get('table_prefix')."posts WHERE post_status='publish' and post_type='post' and post_name=?");
 		$stmt->bindValue(1, $postName);
 		$stmt->execute();
 		if($stmt->rowCount() == 1){
@@ -290,7 +290,7 @@ class Eposts
 			$category1 = $stmt->fetch(PDO::FETCH_ASSOC);
 			$category_id = $category1['category_id'];
 	
-			$stmt2 = self::$_db->prepare("SELECT * FROM ".EConfig::get('table_prefix')."posts JOIN ".EConfig::get('table_prefix')."post_category ON ".EConfig::get('table_prefix')."posts.post_id=".EConfig::get('table_prefix')."post_category.post_id WHERE ".EConfig::get('table_prefix')."post_category.category_id=? and ".EConfig::get('table_prefix')."posts.post_status='publish' ORDER BY ".EConfig::get('table_prefix')."posts.post_date DESC");
+			$stmt2 = self::$_db->prepare("SELECT * FROM ".EConfig::get('table_prefix')."posts JOIN ".EConfig::get('table_prefix')."post_category ON ".EConfig::get('table_prefix')."posts.post_id=".EConfig::get('table_prefix')."post_category.post_id WHERE ".EConfig::get('table_prefix')."post_category.category_id=? and ".EConfig::get('table_prefix')."posts.post_status='publish' and post_type='post' ORDER BY ".EConfig::get('table_prefix')."posts.post_date DESC");
 			$stmt2->bindValue(1, $category_id);
 			$stmt2->execute();
 			if($stmt2->rowCount() > 0){
@@ -312,7 +312,7 @@ class Eposts
 	}
 	
 	public function get_lastPost($numberOfPosts){
-		$stmt = self::$_db->query("SELECT post_title, post_name,post_status FROM ".EConfig::get('table_prefix')."posts WHERE post_status='publish' ORDER BY post_date DESC LIMIT {$numberOfPosts}");
+		$stmt = self::$_db->query("SELECT post_title, post_name,post_status FROM ".EConfig::get('table_prefix')."posts WHERE post_status='publish' and post_type='post' ORDER BY post_date DESC LIMIT {$numberOfPosts}");
 		$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $res;
 	}
@@ -478,7 +478,7 @@ class Eposts
 		#$all_posts = $this->get_allPosts();
 		$page       = ( isset( $_GET['pg'] ) ) ? $_GET['pg'] : 1;
 		$links      = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 2;
-		$Paginator = new Paginator("SELECT * FROM ".EConfig::get('table_prefix')."posts WHERE post_status='publish' ORDER BY post_date DESC");
+		$Paginator = new Paginator("SELECT * FROM ".EConfig::get('table_prefix')."posts WHERE post_status='publish' and post_type='post' ORDER BY post_date DESC");
 		$all_posts = $Paginator->getData($page);
 		if($all_posts == "ERROR"){
 			return "<div class='iw-alerts iw-danger'>Not found!</div>";

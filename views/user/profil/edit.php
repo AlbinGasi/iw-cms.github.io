@@ -1,6 +1,7 @@
 <?php
 SiteFunc::master_header("User profil","Profil","<li><a href='user/'>User</a></li><li>Profil edit</li>");
-$this->user_id = (isset($_SESSION['user_ag']['user_id'])) ? $_SESSION['user_ag']['user_id'] : -122;
+$siteHASH = Config::get('hash_key');
+$this->user_id = (isset($_SESSION[$siteHASH ]['user_id'])) ? $_SESSION[$siteHASH ]['user_id'] : -122;
 ?>
 
 <style>

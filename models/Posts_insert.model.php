@@ -44,14 +44,14 @@ class Posts_insert extends Posts
 	}
 	
 	public static function get_postDate($id){
-		$stmt = self::$_db->query("SELECT post_date FROM ".Config::get('table_prefix')."posts WHERE post_id='{$id}'");
+		$stmt = self::$_db->query("SELECT post_date2 FROM ".Config::get('table_prefix')."posts WHERE post_id='{$id}'");
 		$id = $stmt->fetch(PDO::FETCH_ASSOC);
-		return $id['post_date'];
+		return $id['post_date2'];
 	}
 
 	
 	public function insert_post($post_title,$post_name,$post_introduction,$post_image,$post_content,$post_category,$post_type,$comment_status,$post_status,$post_author,$post_category2){
-		$cdate = date("Y-m-d H:i:s");
+		$cdate = date("d.m.Y H:i");
 		$stmt = self::$_db->prepare("INSERT INTO ".Config::get('table_prefix')."posts(post_title,post_introduction,post_image,post_content,post_category,post_author,post_status,post_type,comment_status,post_name,post_date2) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 		$stmt->bindValue(1, $post_title);
 		$stmt->bindValue(2, $post_introduction);
@@ -75,7 +75,13 @@ class Posts_insert extends Posts
 			 $stmt2->bindValue(2,$category_id);
 			 $stmt2->execute();
 		}
-		$pname2 = $post_name . "/" . $last_id;
+
+		if($post_type == 'post'){
+			$pname2 = $post_name . "-" . $last_id;
+		}else{
+			$pname2 = $post_name;
+		}
+		
 		
 		$stmt3 = self::$_db->query("UPDATE ".Config::get('table_prefix')."posts SET post_name='$pname2' WHERE post_id='$last_id'");
 		$stmt4 = self::$_db->query("UPDATE ".Config::get('table_prefix')."posts SET post_date2='$post_date' WHERE post_id='$last_id'");
